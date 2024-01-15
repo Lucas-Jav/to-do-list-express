@@ -7,31 +7,43 @@ const Checklist = require('../models/checklist');
 router.get('/', async (req, res) => {
     try {
         const checklists = await Checklist.find();
-        res.status(200).json(checklists);
+        res.status(200).render('checklists/Index', {checklists: checklists})
     } catch(err) {
-        res.status(422).json(err);
+        res.status(422).render('pages/error', {error: 'Erro ao exibir as Listas'})
     }
 })
 
-router.post('/', async (req,res) => {
-    let { name } = req.body;
-
+router.get('/new', async (req, res) => {
     try {
-        let checklist = await Checklist.create({ name });
-        res.status(200).json(checklist);
+        let checklist = new Checklist();
+        res.status(200).render("checklists/new", { checklist: checklist })
     } catch(err) {
-        res.status(422).json(err);
+        res.status(422).render('pages/error', {error: 'Erro ao exibir as Listas'})
     }
 })
 
 router.get('/:id', async (req, res) => {
     try {
         const checklist = await Checklist.findById(req.params.id);
-        res.status(200).json(checklist);
+        res.status(200).render('checklists/show', {checklist: checklist})
     } catch(err) {
-        res.status(422).json(err);
+        res.status(422)
     }
 })
+
+router.post('/', async (req,res) => {
+    let { name } = req.body.checklist;
+    let checklist = new Checklist({name})
+
+    try {
+        await checklist.save();
+        res.redirect("/checklists")
+    } catch(error) {
+        res.status(422).render('checklists/new', { checklist: { ...checklist, error } })
+    }
+})
+
+
 
 router.put('/:id', async (req, res) => {
     try {

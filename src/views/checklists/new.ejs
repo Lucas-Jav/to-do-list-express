@@ -1,0 +1,12 @@
+<%- include('../layouts/header.ejs', {title: 'Show'}) %>
+
+<%- include('../layouts/menu.ejs') %>
+<section class="section">
+    <div class="container">
+        <h1 class="title size-4">Nova Lista</h1>
+
+        <%- include('./form.ejs', { method: 'post', url: '/checklists', checklist: checklist }) %>
+    </div>
+</section>
+
+<%- include('../layouts/footer.ejs') %>
